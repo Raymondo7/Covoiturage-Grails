@@ -1,16 +1,156 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>CovoiturageRails</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+<head>
+  <title>CovoiturageRails</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
-  </head>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 
-  <body>
-    <%= yield %>
-  </body>
+  <!-- CSS Files -->
+  <%#= stylesheet_link_tag "bootstrap.min" %>
+  <%#= stylesheet_link_tag "bootstrap-icons" %>
+  <%#= stylesheet_link_tag "all.min" %>
+
+  <!-- Template Main CSS File -->
+  <%= stylesheet_link_tag "theme" %>
+  <%= javascript_include_tag 'channels/notification_channel' %>
+  <%= javascript_importmap_tags %>
+
+  <%= javascript_include_tag "bootstrap-navbar" %>
+  <%= javascript_include_tag "theme" %>
+  <%= javascript_include_tag "all.min" %>
+  <%= javascript_include_tag "bootstrap.min" %>
+  <%= javascript_include_tag "is.min" %>
+  <%= javascript_include_tag "popper.min" %>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+</head>
+<body>
+<main class="main" id="top">
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
+    <div class="container">
+      <a class="navbar-brand" href="/"><span class="fw-bold text-primary ms-2">Covoiturer</span></a>
+      <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span></button>
+      <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
+        <ul class="navbar-nav mx-auto pt-2 pt-lg-0 font-base">
+          <li class="nav-item px-2"><a class="nav-link" href="">
+            <span class="nav-link-icon text-800 me-1 fas fa-road"></span><span class="nav-link-text">Trajets Disponibles</span></a>
+          </li>
+          <li class="nav-item px-2"><a class="nav-link" href="">
+            <span class="nav-link-icon text-800 me-1 fas fa-hotel"></span><span class="nav-link-text">Hotels</span></a>
+          </li>
+          <li class="nav-item px-2">
+            <%= link_to users_path, class: "nav-link" do %>
+              <span class="nav-link-icon text-800 me-1 fas fa-hotel"></span>
+              <span class="nav-link-text">Utilisateurs</span>
+            <% end %>
+          </li>
+        </ul>
+        <% if user_signed_in? %>
+          <a class="btn btn-outline-warning nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modal-create-trip">
+            <span class="nav-link-icon text-800 me-1 fas fa-plus"></span>
+            <span class="nav-link-text">Créer un trajet</span>
+          </a>
+        <% else %>
+          <a href="/users/sign_in" class="btn btn-voyage-outline order-0" type="submit"><span class="text-primary">Connexion</span></a>
+          <a href="/users/sign_up" class="btn btn-voyage-outline order-0" type="submit"><span class="text-primary">Inscription</span></a>
+        <% end %>
+      </div>
+    </div>
+  </nav>
+  <div class="modal fade" id="modal-create-trip" tabindex="-1" aria-labelledby="modal-create-trip-label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal-create-trip-label">Créer un trajet</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <%= form_with(model: @trip, url: trips_path, method: :post, class: 'row g-1') do |form| %>
+            <!-- Départ -->
+            <div class="mb-3 col-md-6">
+              <%= form.label :origine, 'Départ', class: 'form-label' %>
+              <%= form.text_field :origine, class: 'form-control', required: true %>
+            </div>
+            <%= form.hidden_field :user_id, value: current_user.id if current_user.present? %>
+            <!-- Destination -->
+            <div class="mb-3 col-md-6">
+              <%= form.label :destination,'Destination', class: 'form-label' %>
+              <%= form.text_field :destination, class: 'form-control', required: true %>
+            </div>
+
+            <!-- Date de Début -->
+            <div class="mb-3 col-md-6">
+              <%= form.label :date_trip, 'Date Départ', class: 'form-label' %>
+              <%= form.date_field :date_trip, class: 'form-control', required: true %>
+            </div>
+
+            <!-- Heure de Départ -->
+            <div class="mb-3 col-md-6">
+              <%= form.label :heure, 'Heure Départ', class: 'form-label' %>
+              <%= form.time_field :heure, class: 'form-control', required: true %>
+            </div>
+
+            <!-- Duréé de Départ -->
+            <div class="mb-3 col-md-6">
+              <%= form.label :duree, 'Durée Trajet', class: 'form-label' %>
+              <%= form.number_field :duree, class: 'form-control', required: true %>
+            </div>
+
+            <!-- Coût du Trajet -->
+            <div class="mb-3 col-md-6">
+              <%= form.label :cout, 'Coût total trajet', class: 'form-label' %>
+              <%= form.text_field :cout, class: 'form-control', required: true %>
+            </div>
+
+            <!-- Nombre de Places -->
+            <div class="mb-3 col-md-6">
+              <%= form.label :place,'Nombre de places' , class: 'form-label' %>
+              <%= form.number_field :place, class: 'form-control', required: true %>
+            </div>
+
+            <div class="mb-3 col-md-6">
+              <%= form.label :type_car, 'Type de voiture', class: 'form-label' %>
+              <%= form.select :type_car, options_for_select(['Électrique', 'Essence']), { prompt: 'Sélectionnez le type de voiture' }, { class: 'form-select', required: true } %>
+            </div>
+
+            <div class="col-12 d-grid mt-4">
+              <%= form.submit 'Créer', class: 'btn btn-primary' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container py-3">
+  <%= yield %>
+</div>
+
+</main>
+  <!-- ============================================-->
+  <!-- <section> begin ============================-->
+  <footer class="bg-primary text-light text-center py-3">
+    <p class="mb-0">
+      <i class="fas fa-phone-alt me-2"></i> +228 99 41 75 64 &nbsp; | &nbsp;
+      <i class="fas fa-envelope me-2"></i> raymondkenavo@gmail.com &nbsp; | &nbsp;
+      <i class="fas fa-map-marker-alt me-2"></i> Tokoin Wuiti, Lomé, Togo
+    </p>
+    <p class="mt-2">
+      Développé par&nbsp;
+      <svg class="bi bi-suit-heart-fill" xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="#EB6453" viewBox="0 0 16 16">
+        <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z"></path>
+      </svg>&nbsp;by&nbsp;<a class="text-light" href="https://kvrcorporation.com" target="_blank">KVRCorporation</a>
+    </p>
+  </footer>
+
+</body>
 </html>

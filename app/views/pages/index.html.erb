@@ -1,0 +1,115 @@
+<section class="mt-7 py-0">
+  <div class="bg-holder w-50 bg-right d-none d-lg-block" style="background-image: url('<%= asset_path('car-5.jpg') %>'); object-fit: contain">
+  </div>
+  <!--/.bg-holder-->
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6 py-3 py-xl-3 py-xxl-7">
+        <h1 class="display-3 text-1000 fw-normal">Partagez la Route,</h1>
+        <h1 class="display-3 text-primary fw-bold">Économisez Ensemble.</h1>
+        <div class="pt-0">
+          <nav>
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <form class="row g-4 mt-5" action="<%= recherche_trips_path %>" method="get">
+                  <div class="col-sm-6 col-md-6 col-xl-5">
+                    <div class="input-group-icon">
+                      <label class="form-label visually-hidden" for="inputAddress1">Départ</label>
+                      <input class="form-control input-box form-voyage-control" name="origine" id="inputAddress1" type="text" placeholder="Départ" required/>
+                      <span class="nav-link-icon text-800 fs--1 input-box-icon"><i class="fas fa-map-marker-alt"></i></span>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-6 col-xl-5">
+                    <div class="input-group-icon">
+                      <label class="form-label visually-hidden" for="inputAddress2">Destination</label>
+                      <input class="form-control input-box form-voyage-control" name="destination" id="inputAddress2" type="text" placeholder="Destination" required/>
+                      <span class="nav-link-icon text-800 fs--1 input-box-icon"><i class="fas fa-map-marker-alt"></i></span>
+                    </div>
+                  </div>
+                  <div class="col-12 col-xl-10 col-lg-12 d-grid mt-6">
+                    <button class="btn btn-secondary" type="submit">Recherche</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="testimonial">
+  <div class="container">
+    <div class="row h-100">
+      <div class="col-lg-7 mx-auto text-center mb-6">
+        <h5 class="fw-bold fs-3 fs-lg-5 lh-sm mb-3">Recommandations</h5>
+      </div>
+      <div class="col-12">
+        <div class="carousel slide" id="carouselTestimonials" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active" data-bs-interval="10000">
+              <div class="row h-100 align-items-center g-2">
+                <% if @trips.present? %>
+                  <% for trip in @trips %>
+                    <div class="col-md-4 mb-3 mb-md-0 h-100">
+                      <a href="<%= trip_path trip.id %>" class="card-link">
+                        <div class="card card-span h-100 text-white"><%= image_tag 'car-3.jpg', class: "img-fluid h-100" %>
+                          <div class="card-body ps-0">
+                            <p class="display-6 text-1000 my-2"><%= trip.origine %> vers <%= trip.destination %></p>
+                            <div class="d-flex align-items-center justify-content-start my-3">
+                          <span class="text-800 fs--1 me-2">
+                            <i class="fas fa-calendar" style="font-size: 20px"></i>
+                          </span>
+                              <span class="text-900 me-3"><%= trip.date_trip.strftime('%Y-%m-%d') %></span>
+                              <span class="text-800 fs--1 me-2">
+                            <i class="mx-5"></i>
+                            <i class="fas fa-clock"></i>
+                          </span><span class="text-900">
+                          <%= trip.user_id %>
+                        </span>
+                            </div>
+                            <span class="text-900 me-5"><i class="fas fa-car" style="font-size: 20px"></i> <%= trip.type_car %></span>
+                            <span class="text-900 me-3">
+  <i class="fas fa-users" style="font-size: 20px"></i>
+                              <%= trip.place %> places /
+  <span class="text-900 fs--1 fw-normal">
+    <%= (trip.place - trip.reservations.sum(:seats)).to_s %> Restants
+  </span>
+</span><h5 class="fw-bold text-1000 text-end my-2 text-truncate">
+                            <i class="fas fa-user"></i> <%= trip.heure.strftime('%H:%M') %></h5>
+                            <h1 class="mb-3 text-primary fw-bolder fs-4"><span><%= trip.cout %> F</span></h1>
+                            <span class="badge bg-soft-secondary p-2"><i class="fas fa-tag text-secondary fs--1 me-1"></i><span class="text-secondary fw-normal fs-1">-15%</span></span>
+                          </div>
+                        </div>
+                      </a>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+            <div class="row">
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselTestimonials" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselTestimonials" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next                                    </span>
+              </button>
+            </div>
+          </div>
+          <div class="row flex-center">
+            <div class="col-auto position-relative z-index-2">
+              <ol class="carousel-indicators me-xxl-7 me-xl-4 me-lg-7">
+                <li class="active" data-bs-target="#carouselTestimonials" data-bs-slide-to="0"></li>
+                <li data-bs-target="#carouselTestimonials" data-bs-slide-to="1"></li>
+                <li data-bs-target="#carouselTestimonials" data-bs-slide-to="2"></li>
+                <li data-bs-target="#carouselTestimonials" data-bs-slide-to="3"></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

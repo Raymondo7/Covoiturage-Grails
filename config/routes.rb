@@ -1,6 +1,20 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  devise_for :users, controllers: { registrations: 'registrations' }
+  resources :users, only: [:index]
+  resources :trips do
+    member do
+      post 'reserve'
+    end
+    member do
+      post 'notify'
+    end
+    resources :comments, only: [:create]
+    collection do
+      get :recherche
+    end
+  end
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  get '/reserver/:id' => 'trips#show'
+
+  root "pages#index"
 end

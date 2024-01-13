@@ -1,0 +1,17 @@
+<!-- _trip.html.erb -->
+<div class="list-group-item list-group-item-action">
+
+    <small class="text-muted"><%= trip.date_trip %></small>
+
+<div class="d-flex justify-content-around align-items-center">
+  <%= image_tag 'covoiture.jpg', class: 'mr-3', width: '150', height: '150' %>
+  <div class="mt-2">
+    <p class="mb-1 display-6"><strong>Départ:</strong> <%= trip.origine %></p>
+    <p class="mb-1 display-6"><strong>Destination:</strong> <%= trip.destination %></p>
+    <!-- Ajoutez d'autres détails du trajet ici si nécessaire -->
+  </div>
+  <div class="mt-2">
+    <h5 class="btn btn-success mb-0"><%= link_to "Détails du trajet", trip, class: 'text-decoration-none text-primary' %></h5>
+  </div>
+</div>
+</div>
